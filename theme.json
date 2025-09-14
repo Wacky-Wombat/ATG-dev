@@ -9,7 +9,7 @@
     "readme": "https://raw.githubusercontent.com/Wacky-Wombat/ATG-dev/main/README.md",
     "image": "https://raw.githubusercontent.com/Wacky-Wombat/ATG-dev.png",
     "author": "12th",
-    "version": "3.0.4b",
+    "version": "3.1.0b",
     "tags": [
         "Zen Browser",
         "Vertical Tabs",
@@ -18,6 +18,6 @@
         "12th"
     ],
     "createdAt": "2025-05-13",
-    "updatedAt": "2025-09-12 20:01",
+    "updatedAt": "2025-09-12 19:13",
     "fork": ["zen"]
 }
