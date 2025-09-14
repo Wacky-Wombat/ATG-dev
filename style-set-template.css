@@ -1,0 +1,44 @@
+/*=====================================================
+  Reusable selector template for further browser styles
+======================================================*/
+
+tab-group:not([split-view-group]) {
+
+  .tab-close-button {}
+
+  .tab-group-label-container {
+
+    &:hover {
+
+      .tab-close-button {}
+    }
+
+    .tab-group-icon-container {
+
+      .group-marker {
+        /*list-style-image: url(chrome://browser/skin/zen-icons/arrow-right.svg) !important;*/
+
+        &:hover {}
+      }
+    }
+
+    .tab-group-icon {}
+
+    .tab-group-label {}
+  }
+
+  .tab-group-container {
+
+    &::after {}
+
+    tab {}
+  }
+
+  &[collapsed] {
+    .tab-group-label-container {
+      .tab-group-icon {
+        .group-marker {}
+      }
+    }
+  }
+}
