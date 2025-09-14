@@ -1,6 +1,6 @@
 /* ==== Tab groups ==== */
 /* https://github.com/Anoms12/Advanced-Tab-Groups */
-/* ====== v3.0.4b ====== */
+/* ====== v3.1.0b ====== */
 tab-group:not([split-view-group]) {
   --advanced-tab-color: var(--tab-group-color);
   --tab-group-color-pale: transparent !important;
@@ -70,8 +70,8 @@ tab-group:not([split-view-group]) {
       min-width: 16px !important;
       width: 16px;
       height: 16px;
-      position: relative;
       border-radius: 4px;
+      position: relative;
     }
 
     .tab-group-label {
@@ -359,10 +359,6 @@ tab-group:not([split-view-group]) {
             translate: 0 0;
           }
         }
-      }
-
-      .tab-group-container {
-        tab:not([selected]) {}
       }
     }
   }
