@@ -1,6 +1,6 @@
 /* ==== Tab groups ==== */
 /* https://github.com/Anoms12/Advanced-Tab-Groups */
-/* ====== v3.0.0b ====== */
+/* ====== v3.0.2b ====== */
 tab-group:not([split-view-group]) {
   --advanced-tab-color: var(--tab-group-color);
   --tab-group-color-pale: transparent !important;
@@ -70,12 +70,12 @@ tab-group:not([split-view-group]) {
       min-width: 16px !important;
       width: 16px;
       height: 16px;
-      border-radius: 4px;
       position: relative;
+      border-radius: 4px;
     }
 
     .tab-group-label {
-      margin-right: auto !important;
+      margin-inline-end: auto !important;
       width: 100%;
       background: transparent !important;
       color: var(--tab-selected-textcolor) !important;
@@ -138,13 +138,65 @@ tab-group:not([split-view-group]) {
 }
 
 
+/* ==== Styles section ==== */
+/* Adds mutually exlusive style sets based on ATG's default styles */
+
+
+/* Circle style */
+@media (-moz-pref("browser.tabs.groups.style", "circle")) {
+
+  tab-group:not([split-view-group]) {
+
+    .tab-close-button {}
+
+    .tab-group-label-container {
+
+      &:hover {
+
+        .tab-close-button {}
+      }
+
+      .tab-group-icon-container {
+
+        .group-marker {
+          /*list-style-image: url(chrome://browser/skin/zen-icons/arrow-right.svg) !important;*/
+
+          &:hover {}
+        }
+      }
+
+      .tab-group-icon {
+        border-radius: 50%;
+      }
+
+      .tab-group-label {}
+    }
+
+    .tab-group-container {
+      margin-inline-start: 17.5px !important;
+
+      &::after {}
+
+      tab {}
+    }
+
+
+    &[collapsed] {
+      .tab-group-label-container {
+        .tab-group-icon {
+          .group-marker {}
+        }
+      }
+    }
+  }
+}
+
+
 /* Arc-like group styling */
-@media (-moz-bool-pref: "browser.tabs.groups.arc-style") and (not (-moz-bool-pref: "browser.tabs.groups.edge-style")) {
+@media (-moz-pref("browser.tabs.groups.style", "arc")) {
 
   tab-group:not([split-view-group]) {
     .tab-group-label-container {
-
-      margin-block: var(--space-large) var(--space-small) !important;
 
       &:hover {
         background-color: transparent !important;
@@ -194,7 +246,7 @@ tab-group:not([split-view-group]) {
 
 
 /* Edge-like group styling */
-@media (-moz-bool-pref: "browser.tabs.groups.edge-style") and (not (-moz-bool-pref: "browser.tabs.groups.arc-style")) {
+@media (-moz-pref("browser.tabs.groups.style", "edge")) {
 
   tab-group:not([split-view-group]) {
 
@@ -310,3 +362,51 @@ tab-group:not([split-view-group]) {
     }
   }
 }
+
+
+/*=====================================================
+  Reusable selector template for further browser styles
+======================================================*/
+/*
+tab-group:not([split-view-group]) {
+
+  .tab-close-button {}
+
+  .tab-group-label-container {
+
+    &:hover {
+
+      .tab-close-button {}
+    }
+
+    .tab-group-icon-container {
+
+      .group-marker {
+        list-style-image: url(chrome://browser/skin/zen-icons/arrow-right.svg) !important;
+
+        &:hover {}
+      }
+    }
+
+    .tab-group-icon {}
+
+    .tab-group-label {}
+  }
+
+  .tab-group-container {
+
+    &::after {}
+
+    tab {}
+  }
+
+
+  &[collapsed] {
+    .tab-group-label-container {
+      .tab-group-icon {
+        .group-marker {}
+      }
+    }
+  }
+}
+*/
