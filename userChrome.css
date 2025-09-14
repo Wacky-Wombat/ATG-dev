@@ -1,6 +1,6 @@
 /* ==== Tab groups ==== */
 /* https://github.com/Anoms12/Advanced-Tab-Groups */
-/* ====== v3.0.2b ====== */
+/* ====== v3.0.4b ====== */
 tab-group:not([split-view-group]) {
   --advanced-tab-color: var(--tab-group-color);
   --tab-group-color-pale: transparent !important;
@@ -89,6 +89,13 @@ tab-group:not([split-view-group]) {
       flex-direction: row;
       align-items: center;
       gap: 5px;
+
+      /* Fix for renaming input */
+      &[id="tab-label-input"] {
+        align-self: center !important;
+        text-align: start !important;
+        margin-inline-start: 4px !important;
+      }
     }
   }
 
@@ -326,12 +333,6 @@ tab-group:not([split-view-group]) {
           margin-inline-start: -24px;
           padding-inline-start: 36px;
         }
-      }
-
-      #tab-label-input {
-        align-self: center !important;
-        width: -moz-available;
-        text-align: start;
       }
     }
 
