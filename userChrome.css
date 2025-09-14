@@ -267,6 +267,10 @@ tab-group:not([split-view-group]) {
       &:hover {
         background-color: transparent !important;
 
+        label + image {
+          margin-inline-start: 16px;
+        }
+
         .tab-close-button {}
       }
 
