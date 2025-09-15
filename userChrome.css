@@ -139,6 +139,8 @@ tab-group:not([split-view-group]) {
       tab:not([selected]) {
         max-height: 0 !important;
         opacity: 0 !important;
+        /* fixes weird scrolling issue */
+        overflow: hidden !important;
       }
     }
   }
