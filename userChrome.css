@@ -13,28 +13,35 @@ tab-group:not([split-view-group]) {
     display: flex !important;
     align-items: center !important;
 
+    .tab-close-button,
+    .group-stash-button {
+      margin-inline-start: 4px !important;
+      /*** "colllapse" instead of "hidden" so they 
+        don't take up space while invisible */
+      visibility: collapse !important;
+    }
+
+    @media (-moz-bool-pref: "browser.tabs.groups.stash-icon") {
+      .group-stash-button {
+        appearance: button;
+        /*list-style-image: url("chrome://browser/skin/taskbar-tabs-add-tab.svg");*/
+        list-style-image: url("chrome://browser/skin/taskbar-tabs-move-tab.svg");
+        width: 12px;
+        height: auto;
+        margin-inline: auto 0;
+        -moz-context-properties: fill, fill-opacity;
+        fill: currentColor
+      }
+    }
+
     &:hover {
       background-color: var(--tab-hover-background-color) !important;
 
-      @media (-moz-bool-pref: "browser.tabs.groups.stash-icon") {
-        .group-stash-button {
-          -moz-window-dragging: no-drag !important;
-          visibility: visible !important;
-          list-style-image: url("chrome://browser/skin/taskbar-tabs-add-tab.svg");
-          /*list-style-image: url("chrome://browser/skin/taskbar-tabs-move-tab.svg");*/
-          width: 16px;
-          height: 16px;
-          margin-inline: auto 0;
-          -moz-context-properties: fill, fill-opacity;
-          fill: currentColor;
-          scale: .85;
-        }
-      }
-
+      .group-stash-button,
       .tab-close-button {
         -moz-window-dragging: no-drag !important;
-        visibility: visible !important;
         display: flex;
+        visibility: visible !important;
       }
     }
 
@@ -75,26 +82,33 @@ tab-group:not([split-view-group]) {
     }
 
     .tab-group-label {
+      font-weight: var(--font-weight-bold) !important;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 5px;
       margin-inline-end: auto !important;
-      width: 100%;
+      width: -moz-available;
       background: transparent !important;
+      outline: none !important;
       color: var(--tab-selected-textcolor) !important;
+
+      /*** Enforcing text-overflow - does it work? */
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis ellipsis !important;
 
       &:-moz-window-inactive {
         color: var(--toolbox-textcolor-inactive) !important;
       }
 
-      font-weight: 600 !important;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 5px;
-
-      /* Fix for renaming input */
+      /*** Fix for #tab-label-input while renaming */
       &[id="tab-label-input"] {
         align-self: center !important;
         text-align: start !important;
-        margin-inline-start: 4px !important;
+        /*margin-inline-start: 4px !important;*/
+        border-radius: var(--tab-border-radius) !important;
+        padding-inline: var(--tab-group-label-padding) !important;
       }
     }
   }
@@ -123,7 +137,6 @@ tab-group:not([split-view-group]) {
     }
   }
 
-
   &[collapsed] {
     .tab-group-label-container {
       .tab-group-icon {
@@ -139,8 +152,40 @@ tab-group:not([split-view-group]) {
       tab:not([selected]) {
         max-height: 0 !important;
         opacity: 0 !important;
-        /* fixes weird scrolling issue */
+        /*** fixes weird scrolling issue */
         overflow: hidden !important;
+      }
+    }
+  }
+}
+
+
+
+/*** Numbered group tabs */
+@media (-moz-pref("browser.tabs.groups.count")) {
+  tab-group:not([split-view-group]) {
+
+    .tab-group-container {
+      counter-reset: tab-counter;
+
+      tab {
+        counter-increment: tab-counter;
+
+        &::before {
+          content: counter(tab-counter);
+          align-self: center;
+          display: grid;
+          place-items: center;
+          flex-shrink: 0;
+          border: 1px solid light-dark(transparent, currentColor);
+          /*border-radius: 50%;*/
+          width: 16px;
+          height: 16px;
+          line-height: normal;
+          margin-inline-end: 5px;
+          border-radius: var(--tab-border-radius);
+          background: var(--advanced-tab-color);
+        }
       }
     }
   }
@@ -151,7 +196,7 @@ tab-group:not([split-view-group]) {
 /* Adds mutually exlusive style sets based on ATG's default styles */
 
 
-/* Circle style */
+/*** Circle style */
 @media (-moz-pref("browser.tabs.groups.style", "circle")) {
 
   tab-group:not([split-view-group]) {
@@ -201,20 +246,48 @@ tab-group:not([split-view-group]) {
 }
 
 
-/* Arc-like group styling */
-@media (-moz-pref("browser.tabs.groups.style", "arc")) {
+/*** Arc-like group styling */
+@media (-moz-pref("browser.tabs.groups.style", "arc")) or (-moz-pref("browser.tabs.groups.style", "arc+")) {
+
+  /*** Set counter for numbered groups */
+  .zen-workspace-normal-tabs-section {
+    counter-reset: tab-groups;
+  }
 
   tab-group:not([split-view-group]) {
+
     .tab-group-label-container {
 
-      &:hover {
-        background-color: transparent !important;
+      /*** Specify and style counter */
 
-        .group-stash-button {
-          opacity: .75;
+      .zen-workspace-normal-tabs-section & {
+        &::before {
+          counter-increment: tab-groups;
+          content: counter(tab-groups);
+          position: absolute;
+          left: 0;
+          display: grid;
+          place-items: center;
+          flex-shrink: 0;
+          box-sizing: border-box;
+          width: 16px;
+          height: 16px;
+          line-height: 1;
+          border: 1px solid light-dark(transparent, color-mix(in srgb, currentColor, transparent 30%));
+          border-radius: 50%;
+          /*border-radius: var(--tab-border-radius);*/
+          margin-inline: 11px 0 !important;
+          /*background: var(--advanced-tab-color);*/
+
+          background-color: light-dark(color-mix(in srgb, var(--zen-primary-color), white 70%), color-mix(in srgb, var(--zen-primary-color), black 40%));
         }
+      }
 
-        .tab-close-button {
+      &:hover {
+        /*background-color: transparent !important;*/
+
+        .tab-close-button,
+        .group-stash-button {
           opacity: .75;
         }
       }
@@ -224,13 +297,15 @@ tab-group:not([split-view-group]) {
       }
 
       .tab-group-label {
-        font-size: .9em;
+        font-size: .9em !important;
         opacity: .75;
-        padding-inline: 0 var(--space-medium) !important;
 
         #tabbrowser-tabs[orient="vertical"] & {
           #tabbrowser-tabs[expanded] & {
-            margin-inline-end: var(--space-medium);
+            /*margin-inline-end: var(--space-medium);*/
+            padding-inline-start: 0 !important;
+            margin-inline-start: 20px !important;
+            letter-spacing: .05em;
           }
         }
       }
@@ -241,67 +316,83 @@ tab-group:not([split-view-group]) {
       margin-block-end: var(--space-medium);
 
       &::after {
-        content: none;
+        content: none !important;
       }
 
-      &[collapsed] {
-        .tab-group-container {
-          margin-inline-end: var(--space-small);
+      tab {
+        margin-inline-start: var(--zen-folder-indent, 14px) !important;
+
+        &:has(+ tab-group) {
+          margin-block-end: 10px !important;
         }
       }
     }
+
+    &[collapsed] {
+      .tab-group-container {
+        margin-inline-end: var(--space-small);
+      }
+    }
+  }
+
+  .change-group-color {
+    display: none !important
   }
 }
 
 
-/* Edge-like group styling */
+/*** Edge-like group styling */
 @media (-moz-pref("browser.tabs.groups.style", "edge")) {
 
   tab-group:not([split-view-group]) {
 
+    --advanced-tab-color-light: ;
+
     .tab-group-label-container {
-      display: grid !important;
-      grid-template-areas: "icon label stash close";
-      grid-template-columns: auto auto 1fr auto;
       height: 26px !important;
       margin-block: 8px 4px !important;
+      paddiing-inline-end: 0 !important;
+
 
       .tab-close-button,
       .group-stash-button {
         justify-self: end;
         color: unset;
-
+        visibility: collapse !important;
       }
 
       &:hover {
         background-color: transparent !important;
 
-        label + image {
-          margin-inline-start: 16px;
+        .tab-close-button,
+        .group-stash-button {
+          visibility: visible !important;
         }
-
-        .tab-close-button {}
       }
 
-      /* first column, area "icon" */
       .tab-group-icon-container {
 
-        grid-area: icon;
         margin-inline-end: 0 !important;
+        position: absolute;
+        left: 0;
 
         .group-marker {
-          -moz-context-properties: fill, fill-opacity;
-          list-style-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M184.75,413.15l2.1-1.8,156.5-136c5.3-4.6,8.6-11.5,8.6-19.2s-3.4-14.6-8.6-19.2L187.15,101.05l-2.6-2.3c-2.5-1.7-5.5-2.7-8.7-2.7-8.7,0-15.8,7.4-15.8,16.6v286.8c0,9.2,7.1,16.6,15.8,16.6,3.3,0,6.4-1.1,8.9-2.9h0Z"/></svg>') !important;
-          fill: currentColor;
-          width: 20px;
-          height: 20px;
+          list-style-image: none !important;
+          mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M184.75,413.15l2.1-1.8,156.5-136c5.3-4.6,8.6-11.5,8.6-19.2s-3.4-14.6-8.6-19.2L187.15,101.05l-2.6-2.3c-2.5-1.7-5.5-2.7-8.7-2.7-8.7,0-15.8,7.4-15.8,16.6v286.8c0,9.2,7.1,16.6,15.8,16.6,3.3,0,6.4-1.1,8.9-2.9h0Z"/></svg>') !important;
+          mask-size: contain;
+          mask-repeat: no-repeat;
+          mask-position: center;
+          width: 16px;
+          height: 16px;
+          /*** a little streching */
+          scale: 1 1.1;
           rotate: 45deg;
           transition: none;
           translate: 0 .15em;
+          background-color: currentColor;
 
-          /* dirty :( */
-          @media (prefers-color-scheme: light) {
-            filter: invert(1);
+          @media (prefers-color-scheme: dark) {
+            background-color: color-mix(in srgb, currentColor, black 90%) !important;
           }
 
           &:hover {}
@@ -313,27 +404,35 @@ tab-group:not([split-view-group]) {
       }
 
       .tab-group-label {
-
-        grid-area: label;
-        max-width: none !important;
+        font-weight: var(--font-weight-bold) !important;
+        margin-inline-start: 4px !important;
+        padding-inline: 24px 7px !important;
+        max-width: fit-content !important;
+        /*** background shorthand has to be separated as a fallback 
+          to be able to apply lighter background-color to labels 
+          w/o killing gradient backgrounds: */
+        background-color: var(--advanced-tab-color) !important;
+        background-image: var(--advanced-tab-color) !important;
 
         @media (prefers-color-scheme: dark) {
-          color: var(--color-gray-100) !important;
+          background-color: color-mix(in srgb, var(--tab-group-color), white 40%) !important;
+          color: color-mix(in srgb, currentColor, black 90%) !important;
+
+          &:-moz-window-inactive {
+            color: color-mix(in srgb, var(--toolbox-textcolor-inactive), black 80%) !important;
+          }
         }
 
-        &::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: var(--advanced-tab-color);
-          visibility: visible;
-          grid-area: label;
-          width: 100%;
-          height: 100% !important;
-          z-index: -1;
-          border-radius: .75em;
-          margin-inline-start: -24px;
-          padding-inline-start: 36px;
+        /*** TEMP! */
+        /*max-width: max-content !important;*/
+        /*padding: 0 0 0 32px !important;*/
+        /*width: 100% !important;*/
+        /*** Does not work in Gecko :( - yet? */
+        field-sizing: content;
+
+        /*** Fix for #tab-label-input while renaming */
+        &[id="tab-label-input"] {
+          max-width: -moz-available !important;
         }
       }
     }
@@ -343,8 +442,15 @@ tab-group:not([split-view-group]) {
       &::after {
         left: -8px !important;
         top: 0;
-        background: var(--advanced-tab-color);
-        /*height: 100%;*/
+        /*** see above */
+        background-color: var(--advanced-tab-color) !important;
+        background-image: var(--advanced-tab-color) !important;
+
+        @media (prefers-color-scheme: dark) {
+          background-color: color-mix(in srgb, var(--tab-group-color), white 40%) !important;
+          color-scheme: dark !important;
+        }
+
         width: 4px;
         border-radius: 2px;
       }
@@ -360,6 +466,108 @@ tab-group:not([split-view-group]) {
             rotate: 0deg;
             translate: 0 0;
           }
+        }
+      }
+    }
+  }
+}
+
+/* Arc-like with flavor */
+@media (-moz-pref("browser.tabs.groups.style", "arc+")) {
+
+  .zen-workspace-normal-tabs-section {
+    counter-reset: tab-groups;
+  }
+
+  tab-group:not([split-view-group]) {
+
+    .tab-icon-stack {
+      /*margin-inline-end: 12px !important;*/
+    }
+
+    .tab-group-label-container {
+
+      .zen-workspace-normal-tabs-section & {
+        &::before {
+          counter-increment: tab-groups;
+          content: counter(tab-groups);
+          display: grid;
+          place-items: center;
+          flex-shrink: 0;
+          border: 1px solid light-dark(transparent, currentColor);
+          /*border-radius: 50%;*/
+          box-sizing: border-box;
+          width: 16px;
+          height: 16px;
+          line-height: 1;
+          background: var(--advanced-tab-color);
+          margin-inline: 10px 0 !important;
+          border-radius: var(--tab-border-radius);
+          background: var(--advanced-tab-color);
+        }
+      }
+
+      &:hover {
+
+        .tab-close-button,
+        .group-stash-button {}
+      }
+
+      .tab-group-icon {}
+
+      .tab-group-label {
+
+        #tabbrowser-tabs[orient="vertical"] & {
+          #tabbrowser-tabs[expanded] & {
+            margin-inline-end: var(--space-medium);
+          }
+        }
+      }
+    }
+
+
+    .tab-group-container {
+      transition: margin-inline-start .1s ease-out;
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        background: var(--advanced-tab-color);
+      }
+
+      &::before {
+        inset: 0 auto 0 0 !important;
+        height: calc(100% - 1px);
+        width: 1px;
+        transition: height .15s ease-in;
+      }
+
+      &::after {
+        inset: auto auto 0 1px !important;
+        width: 100%;
+        height: 1px;
+        transition: width .15s ease-in .15s;
+      }
+
+
+      tab {
+        :root[zen-sidebar-expanded="true"] & {
+          margin-inline-start: var(--zen-folder-indent, 14px) !important;
+        }
+      }
+    }
+
+    &[collapsed] {
+      .tab-group-container {
+        /*margin-inline-start: 24px !important;*/
+
+        &::before {
+          height: 0;
+        }
+
+        &::after {
+          width: 0;
         }
       }
     }
@@ -413,3 +621,29 @@ tab-group:not([split-view-group]) {
   }
 }
 */
+
+
+
+
+
+/*** TEMP! [debugging] */
+/*zen-folder {
+  > .tab-group-label-container {
+
+    > label,
+    > #tab-label-input {
+      outline: 1px solid red !important;
+    }
+  }
+}
+
+tab-group:not([split-view-group]) {
+  .tab-group-label-container {
+    outline: 1px solid lightgreen !important;
+
+    > #tab-label-input {
+      background-image: var(--tab-group-color) !important;
+      background-color: rgb(from var(--tab-group-color) r g b / 50%) !important
+    }
+  }
+}*/
