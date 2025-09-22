@@ -49,6 +49,10 @@
       {
         "label": "Edge-like",
         "value": "edge"
+      },
+      {
+        "label": "[uc] Arc-like w flavor",
+        "value": "arc+"
       }
     ]
   }
